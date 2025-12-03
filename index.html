@@ -4,23 +4,151 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    
+    <audio id="bg-music" loop></audio>
+
     <div class="container">
+        
         <div class="card">
             <div class="card-inner">
                 <div class="front">
                     <h2>Eros_iv3</h2>
                     <p>Chào mừng bạn đến với trang cá nhân của tôi!</p>
-                    <button>Tìm hiểu thêm</button>
+                    <button class="flip-btn">Tìm hiểu thêm</button>
                 </div>
+
                 <div class="back">
                     <h1>Về tôi</h1>
-                    <p>Tôi là Eros_iv3, một người đam mê công nghệ và lập trình. Tôi thích khám phá các ngôn ngữ lập trình mới và xây dựng các dự án thú vị.</p>
+                    <p>Tôi là Eros_iv3, một người đam mê công nghệ và lập trình. Tôi thích khám phá các ngôn ngữ mới.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+                    <div class="social-icons" style="margin-top: 20px;">
+                        <a href="#"><i class="fa-solid fa-image"></i></a>
+                        <a href="#"><i class="fa-solid fa-code"></i></a>
+                    </div>
+                    <button class="flip-btn" style="margin-top: 20px;">Quay lại</button>
                 </div>
             </div>
         </div>
+
+        <div class="music-bar-container">
+            <div class="music-icon">
+                <i class="fa-solid fa-music"></i>
+            </div>
+            <div class="music-info">
+                <div class="music-title">Đang tải nhạc...</div>
+                <div class="progress-area">
+                    <span class="time" id="current-time">0:00</span>
+                    <div class="progress-line">
+                        <div class="progress-active"></div>
+                    </div>
+                    <span class="time">3:04</span>
+                </div>
+            </div>
+            <div class="music-controls">
+                <i class="fa-solid fa-backward-step" onclick="loadRandomSong()"></i> <i class="fa-solid fa-play" id="main-play-btn"></i>
+                <i class="fa-solid fa-forward-step" onclick="loadRandomSong()"></i>
+            </div>
+        </div>
+
     </div>
+
+    <script>
+        // --- DANH SÁCH NHẠC ---
+        const playlist = [
+            {
+                name: "KIỆT TÁC - RHYDER",
+                // Lưu ý: Nếu dùng nhạc trong máy, hãy đổi tên file ngắn gọn (vd: nhac1.mp3) 
+                // và để cùng thư mục với file index.html
+                link: "kiệt tác.mp3" 
+            },
+            {
+                name: "0 ai nghĩ - Wxrdie",
+                link: "0 ai nghĩ.mp3"
+            },
+            {
+                name: "Nhạc Anime (Demo)",
+                link: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+            }
+        ];
+
+        // --- XỬ LÝ LOGIC ---
+        const audio = document.getElementById('bg-music');
+        const songTitle = document.querySelector('.music-title');
+        const playBtnIcon = document.getElementById('main-play-btn');
+        const barFill = document.querySelector('.progress-active');
+        const timeDisplay = document.getElementById('current-time');
+        const card = document.querySelector('.card');
+
+        // 1. Hàm lật thẻ (Gán sự kiện cho các nút bấm)
+        document.querySelectorAll('.flip-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                card.classList.toggle('is-flipped');
+            });
+        });
+
+        // 2. Hàm Random nhạc
+        function loadRandomSong() {
+            const randomIndex = Math.floor(Math.random() * playlist.length);
+            const song = playlist[randomIndex];
+            
+            audio.src = song.link;
+            songTitle.innerText = song.name;
+            
+            // Reset nút play về trạng thái pause khi đổi bài
+            audio.play();
+            playBtnIcon.classList.remove('fa-play');
+            playBtnIcon.classList.add('fa-pause');
+        }
+
+        // Chạy ngay khi vào web
+        loadRandomSong();
+
+        // 3. Xử lý nút Play/Pause
+        playBtnIcon.addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play();
+                this.classList.remove('fa-play');
+                this.classList.add('fa-pause');
+            } else {
+                audio.pause();
+                this.classList.remove('fa-pause');
+                this.classList.add('fa-play');
+            }
+        });
+
+        // 4. Thanh chạy nhạc
+        audio.addEventListener('timeupdate', () => {
+            if(audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                barFill.style.width = percent + '%';
+                
+                // Tính phút:giây
+                const min = Math.floor(audio.currentTime / 60);
+                let sec = Math.floor(audio.currentTime % 60);
+                if(sec < 10) sec = `0${sec}`;
+                timeDisplay.innerText = `${min}:${sec}`;
+            }
+        });
+
+        // 5. Tuyết rơi
+        function createSnow() {
+            const snow = document.createElement('div');
+            snow.innerHTML = '❅';
+            snow.classList.add('snowflake');
+            snow.style.left = Math.random() * 100 + 'vw'; // vw = chiều rộng màn hình
+            snow.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            snow.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(snow);
+            setTimeout(() => snow.remove(), 5000);
+        }
+        setInterval(createSnow, 150);
+    </script>
 </body>
 </html>

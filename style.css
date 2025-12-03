@@ -1,87 +1,214 @@
-*{
+/* --- 1. CẤU HÌNH CHUNG --- */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Arial', sans-serif;
 }
-body{
+
+body {
     width: 100%;
     height: 100vh;
-    background-image: url(https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXh0M3B1ZHkybzkza3RjOXljbG14NXVqZHh1MGRzcmRnM2I3dTAzNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pVGsAWjzvXcZW4ZBTE/giphy.gif);
+    background-image: url("https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXh0M3B1ZHkybzkza3RjOXljbG14NXVqZHh1MGRzcmRnM2I3dTAzNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pVGsAWjzvXcZW4ZBTE/giphy.gif");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
     overflow: hidden;
+    
+    /* Căn giữa toàn bộ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
-.container{
-    width: 100%;
-    padding: 10px;
+
+/* --- 2. CARD --- */
+.container {
+    perspective: 1000px;
+    z-index: 10; /* Nổi trên tuyết */
 }
+
 .card {
     width: 380px;
     height: 515px;
-    margin: 100px auto 0;
-    background: transparent; 
-    perspective: 1000px; 
+    margin: 0 auto; /* Bỏ margin top cứng để flex căn giữa chuẩn hơn */
+    position: relative;
+    transform-style: preserve-3d;
 }
 
 .card-inner {
     width: 100%;
     height: 100%;
     position: relative;
-    transition: transform 0.6s;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform-style: preserve-3d;
 }
-.front, .back{
+
+/* Kích hoạt lật thẻ (Dùng class này để JS gọi) */
+.card.is-flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.front, .back {
     width: 100%;
     height: 100%;
-    border-radius: 15px;
+    border-radius: 20px;
     position: absolute;
     backface-visibility: hidden;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
-.front{
-    background: url(image/Fushi\ 〣\ To\ Your\ Eternity.jpg);
+
+/* --- 3. MẶT TRƯỚC --- */
+.front {
+    background: url("image/Fushi 〣 To Your Eternity.jpg");
     background-size: cover;
     background-position: center;
-    padding: 60px 40px;
+    padding: 40px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    color: #ccc;
+    color: #fff;
+    /* Phủ tối nhẹ để chữ dễ đọc */
+    box-shadow: inset 0 -100px 100px -50px rgba(0,0,0,0.8);
 }
-.front h2{
-    font-weight: 500;
-}
-.front p{
-    color: #ccc;
-    font-size: 13px;
-}
-.front button{
-    width: 120px;
-    border: 1px solid #fff;
-    background: transparent;
+
+.front h2 { font-size: 28px; font-weight: 700; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.front p { color: #ddd; font-size: 14px; margin-bottom: 15px; }
+
+/* Nút bấm chung */
+button {
+    border: 1px solid rgba(255,255,255,0.5);
+    background: rgba(0,0,0,0.3);
     color: #fff;
     border-radius: 50px;
     cursor: pointer;
-    margin-top: 20px;
-    padding: 8px 20px;
+    padding: 10px 25px;
+    font-weight: 600;
+    transition: 0.3s;
+    width: fit-content;
+    backdrop-filter: blur(5px);
 }
-.back{
+button:hover { background: #fff; color: #000; }
+
+/* --- 4. MẶT SAU (ĐÃ SỬA GIAO DIỆN) --- */
+.back {
+    background: rgba(20, 20, 20, 0.85); /* Nền kính tối màu */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 40px;
+    transform: rotateY(180deg);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.back h1 { font-size: 32px; margin-bottom: 15px; }
+.back p { font-size: 15px; line-height: 1.6; color: #ccc; margin-bottom: 20px; }
+
+/* --- 5. ICON MẠNG XÃ HỘI (ĐÃ SỬA LỖI) --- */
+.social-icons {
+    display: flex;
+    gap: 20px; /* Khoảng cách giữa các icon */
+    margin: 10px 0 20px 0;
+}
+
+.social-icons a {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.social-icons a:hover {
+    transform: translateY(-5px);
     background: #fff;
-    color: #333;
-    padding: 20px 40px;
-    transform: rotateY(180deg);
+    color: #000;
+    box-shadow: 0 0 15px rgba(255,255,255,0.5);
 }
-.back h1{
-    font-size: 50px;
-    line-height: 55px;
-    margin-bottom: 10px;
+
+/* --- 6. THANH NHẠC --- */
+.music-bar-container {
+    width: 380px;
+    margin-top: 20px;
+    background: rgba(30, 30, 30, 0.7);
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 10;
 }
-.back p{
-    font-size: 14px;
+
+.music-icon {
+    width: 45px;
+    height: 45px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
 }
-.ba
-.card:hover .card-inner{
-    transform: rotateY(180deg);
+
+.music-info { flex: 1; overflow: hidden; }
+.music-title { font-size: 14px; font-weight: bold; margin-bottom: 5px; white-space: nowrap; }
+
+.progress-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: #aaa;
+}
+
+.progress-line {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 5px;
+    position: relative;
+}
+
+.progress-active {
+    width: 0%;
+    height: 100%;
+    background: #fff;
+    border-radius: 5px;
+    transition: width 0.1s linear;
+}
+
+.music-controls { display: flex; gap: 15px; font-size: 16px; color: #ccc; cursor: pointer; }
+.music-controls i:hover { color: #fff; transform: scale(1.1); }
+
+/* --- 7. TUYẾT RƠI --- */
+.snowflake {
+    position: fixed;
+    top: -20px;
+    color: rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+    z-index: -1;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to { transform: translateY(105vh); }
 }
